@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="scriptorium">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>WOVENWYRM · scriptorium draconis · forgotten tomes</title>
+  <!-- Typography: calligraphic serif + monastic sans with parchment soul -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Goudy+Bookletter+1911&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root[data-theme="scriptorium"] {
+      --bg: #120e10;
+      --surface: #1e181b;
+      --surface-elevated: #2d2328;
+      --text: #f2ece1;
+      --text-soft: #cdbbaa;
+      --text-muted: #6e5a4f;
+      --accent: #b4876a;
+      --accent-glow: #d9aa88;
+      --accent-deep: #956648;
+      --accent-subtle: #3e2e28;
+      --border-light: #4a3a33;
+      --shadow-sm: 0 12px 28px -10px rgba(0,0,0,0.7);
+      --shadow-lg: 0 28px 45px -14px rgba(0,0,0,0.85);
+      --transition: 0.3s ease;
+      --radius-card: 4px 20px 4px 20px;
+      --grid-gap: 1.8rem;
+    }
+
+    :root[data-theme="parchment"] {
+      --bg: #f4efe7;
+      --surface: #ffffff;
+      --surface-elevated: #fefaf4;
+      --text: #2c241f;
+      --text-soft: #7a685a;
+      --text-muted: #cfc0b2;
+      --accent: #b27a58;
+      --accent-glow: #cd9775;
+      --accent-deep: #915e3f;
+      --accent-subtle: #e8ddd2;
+      --border-light: #e0d2c4;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 0px; }
+
+    /* header — monastic archive */
+    .wovenwurm-header {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      background: rgba(18, 14, 16, 0.95);
+      backdrop-filter: blur(14px);
+      border-bottom: 2px solid var(--accent);
+      transition: var(--transition);
+    }
+    [data-theme="parchment"] .wovenwurm-header {
+      background: rgba(244, 239, 231, 0.96);
+      border-bottom-color: var(--accent);
+    }
+
+    .nav-wyrm {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.9rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .brand-wyrm {
+      font-family: 'Goudy Bookletter 1911', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: var(--accent-glow);
+      text-transform: uppercase;
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+    }
+    .brand-wyrm span {
+      font-size: 0.55rem;
+      font-weight: 400;
+      letter-spacing: 3px;
+      margin-left: 8px;
+      color: var(--text-soft);
+    }
+
+    .nav-wyrm-links {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+    }
+    .nav-wyrm-links a {
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .nav-wyrm-links a:hover { color: var(--accent-glow); border-bottom: 1px solid; padding-bottom: 2px; }
+
+    .wyrm-utils {
+      display: flex;
+      gap: 1.4rem;
+      align-items: center;
+    }
+    #themeToggleWyrm {
+      background: var(--accent-subtle);
+      border: none;
+      padding: 5px 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      font-family: monospace;
+    }
+    .wyrm-cart {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+    }
+    .cart-count-wyrm {
+      background: var(--accent);
+      color: #120e10;
+      font-size: 0.55rem;
+      font-weight: 800;
+      border-radius: 30px;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -8px;
+      right: -14px;
+    }
+
+    /* hero — forgotten library */
+    .hero-scriptorium {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: 50% 40%;
+    }
+    .hero-scriptorium::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, #120e10cc 0%, #1c1518bb 100%);
+      z-index: 1;
+    }
+    .hero-wyrm-content {
+      position: relative;
+      z-index: 2;
+      max-width: 660px;
+      padding: 0 6%;
+    }
+    .hero-wyrm-badge {
+      font-size: 0.6rem;
+      letter-spacing: 5px;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      color: var(--accent-glow);
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+      font-family: monospace;
+    }
+    .hero-wyrm-title {
+      font-family: 'Goudy Bookletter 1911', serif;
+      font-size: clamp(4rem, 12vw, 7rem);
+      font-weight: 400;
+      line-height: 1.0;
+      margin-bottom: 0.8rem;
+      color: #f4ede0;
+      letter-spacing: -1px;
+    }
+    .hero-wyrm-offer {
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      background: rgba(0,0,0,0.55);
+      display: inline-block;
+      padding: 0.45rem 1.2rem;
+      backdrop-filter: blur(4px);
+      font-family: monospace;
+    }
+
+    .btn-wyrm {
+      background: var(--accent);
+      border: none;
+      padding: 0.85rem 2.2rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-block;
+      text-decoration: none;
+      color: #120e10;
+      font-family: monospace;
+    }
+    .btn-wyrm:hover {
+      background: var(--accent-glow);
+      transform: translateX(5px);
+    }
+
+    /* collection header */
+    .wyrm-collection {
+      max-width: 1440px;
+      margin: 3rem auto 0.5rem auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.7rem;
+    }
+    .wyrm-collection h2 {
+      font-family: 'Goudy Bookletter 1911', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+    }
+    .wyrm-collection p {
+      color: var(--accent-glow);
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+    }
+
+    /* product grid — illuminated relic */
+    .grid-wyrm {
+      max-width: 1440px;
+      margin: 2rem auto 5rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--grid-gap);
+    }
+
+    .wyrm-card {
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      transition: var(--transition);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .wyrm-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-glow);
+      box-shadow: var(--shadow-lg);
+    }
+    .wyrm-media {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--surface-elevated);
+    }
+    .wyrm-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .wyrm-card:hover .wyrm-media img { transform: scale(1.03); }
+    .wyrm-quick {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(30, 24, 27, 0.94);
+      backdrop-filter: blur(8px);
+      padding: 0.8rem;
+      opacity: 0;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .wyrm-card:hover .wyrm-quick { opacity: 1; }
+    .wyrm-quick button {
+      background: var(--accent);
+      border: none;
+      width: 90%;
+      padding: 0.6rem;
+      font-size: 0.55rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #111;
+      font-family: monospace;
+    }
+    .wyrm-quick button:hover { background: white; color: #1e181b; }
+
+    .wyrm-info {
+      padding: 1rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .wyrm-detail h4 {
+      font-size: 0.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-glow);
+      letter-spacing: 2px;
+    }
+    .wyrm-detail h3 {
+      font-family: 'Goudy Bookletter 1911', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+    .wyrm-price { text-align: right; }
+    .wyrm-current { font-weight: 800; font-size: 1rem; }
+    .wyrm-old { font-size: 0.65rem; text-decoration: line-through; color: var(--text-muted); margin-left: 0.3rem; }
+
+    /* cart — scribe satchel */
+    .cart-overlay-wyrm {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.97);
+      backdrop-filter: blur(20px);
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+    .cart-overlay-wyrm.active { visibility: visible; opacity: 1; }
+    .cart-wyrm-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      max-width: 520px;
+      height: 100vh;
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      box-shadow: var(--shadow-lg);
+      z-index: 2001;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-overlay-wyrm.active .cart-wyrm-panel { transform: translateX(0); }
+    .cart-wyrm-header {
+      padding: 1.4rem;
+      border-bottom: 1px solid var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-wyrm-header h3 {
+      font-family: 'Goudy Bookletter 1911', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--accent-glow);
+    }
+    .close-wyrm-cart {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .cart-wyrm-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .wyrm-cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.8rem;
+      background: var(--surface-elevated);
+      border-left: 3px solid var(--accent);
+      position: relative;
+      border-radius: 12px;
+    }
+    .wyrm-cart-img {
+      width: 70px;
+      height: 85px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .wyrm-cart-details { flex: 1; }
+    .wyrm-cart-name {
+      font-family: 'Goudy Bookletter 1911', serif;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    .wyrm-cart-price { font-size: 0.75rem; color: var(--accent-glow); margin-top: 4px; }
+    .wyrm-cart-qty {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .wyrm-qty-btn {
+      background: var(--accent-subtle);
+      border: none;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text);
+      font-family: monospace;
+    }
+    .wyrm-qty-btn:hover { background: var(--accent); color: #111; }
+    .wyrm-remove {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .cart-wyrm-footer {
+      padding: 1.5rem;
+      border-top: 2px solid var(--accent);
+      background: var(--surface);
+    }
+    .wyrm-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .wyrm-checkout {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      padding: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #120e10;
+      font-family: monospace;
+    }
+    .wyrm-checkout:hover { background: var(--accent-glow); transform: scale(0.98);}
+    .empty-wyrm-cart { text-align: center; color: var(--text-soft); padding: 2rem; font-size: 0.75rem;}
+
+    footer {
+      background: var(--surface-elevated);
+      margin-top: 2rem;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--accent);
+    }
+    .footer-wyrm {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .footer-wyrm-brand {
+      font-family: 'Goudy Bookletter 1911', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--accent-glow);
+    }
+    .footer-wyrm-regions {
+      font-size: 0.5rem;
+      letter-spacing: 3px;
+      color: var(--text-soft);
+      margin: 0.6rem 0 1rem;
+    }
+
+    /* modal — draconic circle */
+    .modal-wyrm {
+      position: fixed;
+      inset: 0;
+      z-index: 2200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.98);
+      backdrop-filter: blur(24px);
+      transition: opacity 0.25s;
+    }
+    .modal-wyrm-block {
+      background: var(--surface);
+      max-width: 530px;
+      width: 100%;
+      border-radius: 16px 40px 16px 40px;
+      border-top: 5px solid var(--accent);
+      padding: 2rem 2rem 2.2rem;
+      position: relative;
+      text-align: center;
+      box-shadow: 0 35px 45px rgba(0,0,0,0.8);
+    }
+    .modal-wyrm-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .modal-wyrm-icon {
+      width: 70px;
+      height: 70px;
+      background: rgba(180, 135, 106, 0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      border-radius: 60px;
+      border: 1px solid var(--accent);
+      color: var(--accent-glow);
+    }
+    .modal-wyrm-title {
+      font-family: 'Goudy Bookletter 1911', serif;
+      font-size: 2.8rem;
+      font-weight: 400;
+      color: var(--accent-glow);
+      margin-bottom: 0.2rem;
+    }
+    .modal-wyrm-desc {
+      color: var(--text-soft);
+      line-height: 1.5;
+      font-size: 0.85rem;
+      margin: 0.8rem 0;
+    }
+    .modal-wyrm-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.6rem;
+    }
+    .btn-wyrm-primary {
+      background: var(--accent);
+      border: none;
+      padding: 0.7rem 2rem;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      color: #120e10;
+      font-family: monospace;
+    }
+    .btn-wyrm-secondary {
+      background: transparent;
+      border: 1px solid var(--accent);
+      padding: 0.7rem 1.8rem;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: var(--text);
+      font-family: monospace;
+    }
+    .modal-fade-wyrm { opacity: 0; pointer-events: none; transition: opacity 0.2s; display: none; }
+
+    @media (max-width: 780px) {
+      .nav-wyrm { flex-direction: column; gap: 0.6rem; }
+      .grid-wyrm { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- entry modal: WOVENWYRM invitation -->
+<div id="entryModalWyrm" class="modal-wyrm">
+  <div class="modal-wyrm-block">
+    <button id="closeWyrmModal" class="modal-wyrm-close"><i class="fas fa-feather-alt"></i></button>
+    <div class="modal-wyrm-icon"><i class="fas fa-dragon"></i></div>
+    <h2 class="modal-wyrm-title">WOVENWYRM</h2>
+    <p class="modal-wyrm-desc">Scriptorium draconis · illuminated craft · forgotten lore. Garments woven from ancient parchment and wyrm-scale wisdom. Enter the archive.</p>
+    <div class="modal-wyrm-buttons">
+      <button id="enterWyrmBtn" class="btn-wyrm-primary">OPEN THE TOME</button>
+      <button id="laterWyrmBtn" class="btn-wyrm-secondary">WANDER LATER</button>
+    </div>
+  </div>
+</div>
+
+<header class="wovenwurm-header">
+  <div class="nav-wyrm">
+    <div class="brand-wyrm">WOVENWYRM<span>· SCRIPTORIUM</span></div>
+    <nav class="nav-wyrm-links">
+      <a href="#shopWyrm">CODEX</a>
+      <a href="#shopWyrm">ILLUMINATIONS</a>
+      <a href="#shopWyrm">SCALES</a>
+      <a href="#">DRACO</a>
+    </nav>
+    <div class="wyrm-utils">
+      <button id="themeToggleWyrm">📜 PARCHMENT MODE</button>
+      <div class="wyrm-cart" id="cartIconWyrm">
+        <i class="fas fa-book"></i>
+        <span class="cart-count-wyrm" id="cartCountWyrm">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero-scriptorium">
+    <div class="hero-wyrm-content">
+      <div class="hero-wyrm-badge">DRACONIC · ILLUMINATED · ANCIENT WISDOM</div>
+      <h1 class="hero-wyrm-title">WOVENWYRM</h1>
+      <div class="hero-wyrm-offer">First scripture: <strong>15% off</strong> your first relic</div>
+      <a href="#shopWyrm" class="btn-wyrm">ENTER SCRIPTORIUM →</a>
+    </div>
+  </section>
+
+  <div class="wyrm-collection" id="shopWyrm">
+    <h2>Draconic Archive · Wyrm Woven</h2>
+    <p>12 illuminated relics</p>
+  </div>
+
+  <div class="grid-wyrm" id="productGridWyrm"></div>
+</main>
+
+<footer>
+  <div class="footer-wyrm">
+    <div class="footer-wyrm-brand">WOVENWYRM</div>
+    <div class="footer-wyrm-regions">SCRIPTORIUM · DRACONIS · LIBRARY OF ASHES</div>
+    <p style="font-size:0.55rem; opacity:0.7;">© 2026 WOVENWYRM — inscribed by fire, carried by scribes.</p>
+  </div>
+</footer>
+
+<!-- CART SIDEBAR -->
+<div id="cartOverlayWyrm" class="cart-overlay-wyrm">
+  <div class="cart-wyrm-panel">
+    <div class="cart-wyrm-header">
+      <h3>📖 WYRM FOLIO</h3>
+      <button class="close-wyrm-cart" id="closeCartWyrm"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-wyrm-items" id="cartItemsWyrm">
+      <div class="empty-wyrm-cart">Your pack is empty.<br>Add scriptorium gear.</div>
+    </div>
+    <div class="cart-wyrm-footer" id="cartFooterWyrm" style="display: none;">
+      <div class="wyrm-total"><span>Total (USD)</span><span id="cartTotalWyrm">$0</span></div>
+      <button class="wyrm-checkout" id="checkoutWyrmBtn">🐉 INSCRIBE ORDER</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // WOVENWYRM collection — illuminated scriptorium artifacts
+  const wyrmProducts = [
+    { id: 901, name: "Scalebound Cloak", category: "OUTER", original: 890, price: 756, img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=687&auto=format&fit=crop", alt: "cloak" },
+    { id: 902, name: "Parchment Tunic", category: "TOPS", original: 325, price: 276, img: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?q=80&w=687&auto=format&fit=crop", alt: "tunic" },
+    { id: 903, name: "Codex Shirt", category: "LAYER", original: 560, price: 476, img: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=715&auto=format&fit=crop", alt: "shirt" },
+    { id: 904, name: "Folio Pants", category: "BOTTOMS", original: 450, price: 382, img: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=600&auto=format&fit=crop", alt: "pants" },
+    { id: 905, name: "Wyrm Anorak", category: "KNIT", original: 770, price: 654, img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=600&auto=format&fit=crop", alt: "anorak" },
+    { id: 906, name: "Rune Vest", category: "VEST", original: 400, price: 340, img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=687&auto=format&fit=crop", alt: "vest" },
+    { id: 907, name: "Illuminated Smock", category: "SMOCK", original: 1020, price: 867, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=687&auto=format&fit=crop", alt: "smock" },
+    { id: 908, name: "Draconic Coat", category: "COAT", original: 1350, price: 1147, img: "https://images.unsplash.com/photo-1598032895397-b9472444bf93?q=80&w=2070&auto=format&fit=crop", alt: "coat" },
+    { id: 909, name: "Script Cargo", category: "BOTTOMS", original: 520, price: 442, img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=600&auto=format&fit=crop", alt: "cargo" },
+    { id: 910, name: "Vellum Hood", category: "HOODIE", original: 320, price: 272, img: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=764&auto=format&fit=crop", alt: "hoodie" },
+    { id: 911, name: "Archive Shell", category: "OUTER", original: 1750, price: 1487, img: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=688&auto=format&fit=crop", alt: "archive" },
+    { id: 912, name: "Wyrm Shacket", category: "SHIRT", original: 620, price: 527, img: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=687&auto=format&fit=crop", alt: "shacket" }
+  ];
+
+  let cartWyrm = [];
+
+  const cartOverlayWyrmDiv = document.getElementById('cartOverlayWyrm');
+  const cartWyrmIcon = document.getElementById('cartIconWyrm');
+  const closeCartWyrmBtn = document.getElementById('closeCartWyrm');
+  const cartWyrmContainer = document.getElementById('cartItemsWyrm');
+  const cartWyrmFooter = document.getElementById('cartFooterWyrm');
+  const cartWyrmTotalSpan = document.getElementById('cartTotalWyrm');
+  const cartWyrmCountSpan = document.getElementById('cartCountWyrm');
+
+  function persistWyrmCart() { localStorage.setItem('WOVENWYRM_CART', JSON.stringify(cartWyrm)); }
+  function loadWyrmCart() {
+    const saved = localStorage.getItem('WOVENWYRM_CART');
+    if (saved) cartWyrm = JSON.parse(saved);
+    renderWyrmCart();
+    updateWyrmCount();
+  }
+  function updateWyrmCount() { cartWyrmCountSpan.innerText = cartWyrm.reduce((sum,i)=>sum+i.qty,0); }
+
+  function renderWyrmCart() {
+    if (!cartWyrmContainer) return;
+    if (cartWyrm.length === 0) {
+      cartWyrmContainer.innerHTML = '<div class="empty-wyrm-cart">Your pack is empty.<br>Add scriptorium gear.</div>';
+      cartWyrmFooter.style.display = 'none';
+      updateWyrmCount(); persistWyrmCart(); return;
+    }
+    cartWyrmFooter.style.display = 'block';
+    let html = ''; let total = 0;
+    cartWyrm.forEach(item => {
+      total += item.price * item.qty;
+      html += `<div class="wyrm-cart-item" data-id="${item.id}">
+          <img class="wyrm-cart-img" src="${item.img}" alt="${item.name}">
+          <div class="wyrm-cart-details">
+            <div class="wyrm-cart-name">${item.name}</div>
+            <div class="wyrm-cart-price">$${item.price.toLocaleString()}</div>
+            <div class="wyrm-cart-qty">
+              <button class="wyrm-qty-dec" data-id="${item.id}">−</button>
+              <span>${item.qty}</span>
+              <button class="wyrm-qty-inc" data-id="${item.id}">+</button>
+            </div>
+          </div>
+          <button class="wyrm-remove" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+        </div>`;
+    });
+    cartWyrmContainer.innerHTML = html;
+    cartWyrmTotalSpan.innerText = `$${total.toLocaleString()}`;
+    document.querySelectorAll('.wyrm-qty-dec').forEach(btn => btn.addEventListener('click', () => updateWyrmQty(parseInt(btn.dataset.id), -1)));
+    document.querySelectorAll('.wyrm-qty-inc').forEach(btn => btn.addEventListener('click', () => updateWyrmQty(parseInt(btn.dataset.id), 1)));
+    document.querySelectorAll('.wyrm-remove').forEach(btn => btn.addEventListener('click', () => removeWyrmItem(parseInt(btn.dataset.id))));
+    updateWyrmCount(); persistWyrmCart();
+  }
+  function updateWyrmQty(pid, delta) {
+    const idx = cartWyrm.findIndex(i=>i.id===pid);
+    if(idx !== -1){
+      const nq = cartWyrm[idx].qty + delta;
+      if(nq <= 0) cartWyrm.splice(idx,1);
+      else cartWyrm[idx].qty = nq;
+      renderWyrmCart();
+    }
+  }
+  function removeWyrmItem(pid){ cartWyrm = cartWyrm.filter(i=>i.id!==pid); renderWyrmCart(); }
+  function addToWyrmCart(pid){
+    const prod = wyrmProducts.find(p=>p.id===pid);
+    if(!prod) return;
+    const existing = cartWyrm.find(i=>i.id===pid);
+    if(existing) existing.qty += 1;
+    else cartWyrm.push({id:prod.id, name:prod.name, price:prod.price, qty:1, img:prod.img});
+    renderWyrmCart();
+    const btn = document.querySelector(`.wyrm-add-${pid}`);
+    if(btn){ let old = btn.innerText; btn.innerText="✓ ADDED"; setTimeout(()=>btn.innerText=old,700); }
+    cartOverlayWyrmDiv.classList.add('active');
+  }
+
+  function renderWyrmProducts() {
+    const container = document.getElementById('productGridWyrm');
+    if(!container) return;
+    container.innerHTML = '';
+    wyrmProducts.forEach(p => {
+      const disc = Math.round(((p.original-p.price)/p.original)*100);
+      const card = document.createElement('div');
+      card.className = 'wyrm-card';
+      card.innerHTML = `
+        <div class="wyrm-media">
+          <img src="${p.img}" alt="${p.alt||p.name}" loading="lazy">
+          <div class="wyrm-quick"><button class="wyrm-add-${p.id} add-wyrm-btn" data-id="${p.id}">📜 ADD TO PACK</button></div>
+        </div>
+        <div class="wyrm-info">
+          <div class="wyrm-detail"><h4>${p.category}</h4><h3>${p.name}</h3></div>
+          <div class="wyrm-price"><span class="wyrm-current">$${p.price.toLocaleString()}</span><span class="wyrm-old">$${p.original.toLocaleString()}</span><span style="font-size:0.55rem;color:var(--accent-glow);display:block;text-align:right;">-${disc}%</span></div>
+        </div>`;
+      container.appendChild(card);
+    });
+    document.querySelectorAll('.add-wyrm-btn').forEach(btn => btn.addEventListener('click', (e)=>{ e.preventDefault(); addToWyrmCart(parseInt(btn.dataset.id)); }));
+  }
+
+  function initThemeWyrm() {
+    const stored = localStorage.getItem('WOVENWYRM-theme');
+    let theme = stored || 'scriptorium';
+    document.documentElement.setAttribute('data-theme', theme);
+    const toggle = document.getElementById('themeToggleWyrm');
+    if(toggle) toggle.textContent = theme === 'scriptorium' ? '📜 PARCHMENT MODE' : '🐉 SCRIPTORIUM MODE';
+  }
+  function toggleThemeWyrm() {
+    const curr = document.documentElement.getAttribute('data-theme');
+    const next = curr === 'scriptorium' ? 'parchment' : 'scriptorium';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('WOVENWYRM-theme', next);
+    const toggleBtn = document.getElementById('themeToggleWyrm');
+    if(toggleBtn) toggleBtn.textContent = next === 'scriptorium' ? '📜 PARCHMENT MODE' : '🐉 SCRIPTORIUM MODE';
+  }
+
+  // modal handlers
+  const modalWyrmElem = document.getElementById('entryModalWyrm');
+  const enterWyrm = document.getElementById('enterWyrmBtn'), laterWyrm = document.getElementById('laterWyrmBtn'), closeWyrmModalBtn = document.getElementById('closeWyrmModal');
+  function closeWyrmModalFunc() {
+    if(modalWyrmElem){
+      modalWyrmElem.classList.add('modal-fade-wyrm');
+      setTimeout(()=>modalWyrmElem.style.display='none',200);
+    }
+  }
+  if(enterWyrm) enterWyrm.addEventListener('click', closeWyrmModalFunc);
+  if(laterWyrm) laterWyrm.addEventListener('click', closeWyrmModalFunc);
+  if(closeWyrmModalBtn) closeWyrmModalBtn.addEventListener('click', closeWyrmModalFunc);
+  if(modalWyrmElem) modalWyrmElem.addEventListener('click',(e)=>{ if(e.target===modalWyrmElem) closeWyrmModalFunc(); });
+
+  cartWyrmIcon?.addEventListener('click',()=>cartOverlayWyrmDiv.classList.add('active'));
+  closeCartWyrmBtn?.addEventListener('click',()=>cartOverlayWyrmDiv.classList.remove('active'));
+  cartOverlayWyrmDiv?.addEventListener('click',(e)=>{ if(e.target===cartOverlayWyrmDiv) cartOverlayWyrmDiv.classList.remove('active'); });
+  document.getElementById('checkoutWyrmBtn')?.addEventListener('click',()=>{ alert('Wovenwyrm records your passage. Your scriptorium order is inscribed in lore.'); cartWyrm=[]; renderWyrmCart(); cartOverlayWyrmDiv.classList.remove('active'); });
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{ a.addEventListener('click',function(e){ const hash=this.getAttribute('href'); if(hash==="#") return; const sec=document.querySelector(hash); if(sec){ e.preventDefault(); sec.scrollIntoView({behavior:'smooth'}); } }); });
+
+  renderWyrmProducts();
+  initThemeWyrm();
+  loadWyrmCart();
+  document.getElementById('themeToggleWyrm')?.addEventListener('click', toggleThemeWyrm);
+</script>
+</body>
+</html>
